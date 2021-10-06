@@ -3,19 +3,107 @@
 {% block content%}
 
 {% if page == 'register'%}
-<form action="{% url 'register' %}" method="post">
-    {% csrf_token %}
-    {{form}}
-    <input type="submit" value='Register'>
-</form>
-<p>Already have an account <a href="{% url 'LoginPage' %}">Login</a></p>
+{% load static %}
+
+<div class="auth">
+    <div class="card">
+        <div class="auth__header text-center">
+            <a href="{% url 'projects' %}">
+                <img src="{% static 'images/icon.svg' %}" alt="icon" />
+            </a>
+            <h3>Account SignUp</h3>
+            <p>Create a new developer account</p>
+        </div>
+
+        <form class="form auth__form" method="post">
+            {% csrf_token %}
+            <!-- Input:Text -->
+            {% for field in form%}
+            <div class="form__field">
+                <label for="formInput#text">{{field.label}} </label>
+                {{field}}
+
+                {% if field.help_text %}
+                <small>{{field.help_text}}</small>
+                {%endif%}
+
+                {%for error in field.errors%}
+                <p style="color:red;">{{error}}</p>
+                {%endfor%}
+            </div>
+
+            {% endfor %}
+            <div class="auth__actions">
+                <input class="btn btn--sub btn--lg" type="submit"
+                    value="Sign In" />
+            </div>
+            {% for msg in messages %}
+            <p>{{ msg }}</p>
+            {% endfor %}
+        </form>
+        <div class="auth__alternative">
+            <p>Already have an Account?</p>
+            <a href="{% url 'LoginPage' %}">Log In</a>
+        </div>
+    </div>
+</div>
+
 {% else %}
-<form action="{% url 'LoginPage' %}" method="post">
-    {% csrf_token %}
-    <input type= 'text' name='user' placeholder="user">
-    <input type= 'password' name='pass' placeholder="pass">
-    <input type="submit" value='Login'>
-    <p>Don't have an account <a href="{% url 'register' %}">Sign up</a></p>
-</form>
+{% load static %}
+<div class="auth">
+    <div class="card">
+        <div class="auth__header text-center">
+            <a href="{% url 'projects' %}" class="header__logo">
+                <img src="{% static 'images/icon.svg' %}" alt="DevSearch Logo"
+                    />
+            </a>
+            <h3>Account Login</h3>
+            <p>Hello Developer, Welcome Back!</p>
+        </div>
+
+        <form class="form auth__form" action="{% url 'LoginPage' %}"
+            method="post">
+            {% csrf_token %}
+            <!-- Input:Email -->
+            <div class="form__field">
+                <label for="formInput#text">Email (username): </label>
+                <input
+                    class="input input--text"
+                    id="formInput#text"
+                    type="text"
+                    name="user"
+                    placeholder="Enter your email (username)..."
+                    />
+            </div>
+
+            <!-- Input:Password -->
+            <div class="form__field">
+                <label for="formInput#password">Password: </label>
+                <input
+                    class="input input--password"
+                    id="formInput#passowrd"
+                    type="password"
+                    name="pass"
+                    placeholder="••••••••"
+                    />
+            </div>
+            <div class="auth__actions">
+                <input class="btn btn--sub btn--lg" type="submit" value="Log In"
+                    />
+                <a href="">Forget Password?</a>
+            </div>
+            {% for msg in messages %}
+            <p>{{ msg }}</p>
+            {% endfor %}
+        </form>
+        <div class="auth__alternative">
+            <p>Don’t have an Account?</p>
+            <a href="{% url 'register' %}">Sign Up</a>
+        </div>
+    </div>
+</div>
+
 {% endif %}
+
+
 {% endblock content%}
