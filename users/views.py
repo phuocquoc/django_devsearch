@@ -13,7 +13,10 @@ page = 'login'
 
 class Profiles(View):
     def get(self, request):
-        profiles = Profile.objects.all()
+        search_querry = ''
+        if request.GET.get('search_querry'):
+            search_querry = request.GET.get('search_querry')
+        profiles = Profile.objects.filter(name__contains=search_querry)
         context = {'profiles': profiles}
         return render(request, 'users/profiles.html', context)
 
@@ -77,3 +80,11 @@ class registerUser(View):
         else:
             messages.error(request, "An error")
             return redirect('register')
+
+
+class userAccount(View):
+    def get(self, request):
+        profiles = request.user.profile
+        projects = profiles.project_set.all()
+        context = {'profiles': profiles, 'projects': projects}
+        return render(request, 'users/account.html', context)

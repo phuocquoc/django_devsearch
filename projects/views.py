@@ -11,7 +11,11 @@ from django.views import View
 
 class projects(View):
     def get(self, request):
-        projcList = Project.objects.all()
+        search_querry = ''
+        if request.GET.get('search_querry'):
+            search_querry = request.GET.get('search_querry')
+        print(search_querry)
+        projcList = Project.objects.filter(title__contains=search_querry)
         content = {'projcList': projcList}
         return render(request, 'projects/projects.html', content)
 
